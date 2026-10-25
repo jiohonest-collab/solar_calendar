@@ -2,192 +2,301 @@
 <html lang="en">
 <head>
 <meta charset="utf-8">
-<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="color-scheme" content="dark"><meta name="theme-color" content="#070B1A"><meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <title>The Solar Calendar</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:wght@600;800&family=Instrument+Sans:wght@400;600&display=swap">
 <style>
-:root,:root[data-theme="dark"]{--bg:#0A0F24;--panel:#151C3B;--line:#2A3361;--ink:#F4F6FF;--mute:#A4ACD0;--gold:#F5A623;--hot:#FF6B35;--onGold:#0A0F24;color-scheme:dark}
-@media (prefers-color-scheme:light){:root:not([data-theme="dark"]){--bg:#EEF1FA;--panel:#FFFFFF;--line:#C9D0EA;--ink:#0A0F24;--mute:#4A5380;--gold:#B26A00;--hot:#C23F0A;--onGold:#FFFFFF;color-scheme:light}}
+:root,:root[data-theme="dark"]{--bg:#070B1A;--panel:rgba(17,26,56,.74);--bd:#273264;--ink:#F4F6FF;--mute:#A4ACD0;--gold:#F5A623;--hot:#FF6B35;--ok:#2FBF71;--onGold:#070B1A;--glow:rgba(245,166,35,.16);color-scheme:dark}
 *{box-sizing:border-box}
 html,body{height:100%;margin:0}
 :root{padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}
 html{scroll-padding-top:env(safe-area-inset-top,0px)}
-body{background:var(--bg);color:var(--ink);font-family:"Instrument Sans",Calibri,Arial,sans-serif;font-size:clamp(1.15rem,2.4vw,1.75rem);line-height:1.45;overflow:hidden}
-h1,h2,.num{font-family:"Bricolage Grotesque",Cambria,Georgia,serif;font-weight:800;line-height:1.05;margin:0}
-h1{font-size:clamp(2.8rem,9vw,6.5rem)}
-h2{font-size:clamp(2rem,5.5vw,3.6rem);margin-bottom:.5em}
-p{margin:.4em 0;max-width:34em}
+body{display:flex;flex-direction:column;background:radial-gradient(62rem 38rem at 90% -8%,rgba(245,166,35,.36),transparent 62%),radial-gradient(52rem 42rem at -8% 108%,rgba(91,124,250,.34),transparent 60%),radial-gradient(34rem 26rem at 52% 48%,rgba(255,107,53,.11),transparent 70%),var(--bg);color:var(--ink);font-family:"Instrument Sans",Calibri,Arial,sans-serif;font-size:clamp(1.1rem,2.2vw,1.65rem);line-height:1.45;overflow:hidden}
+h1,h2,b.hd,.num{font-family:"Bricolage Grotesque",Cambria,Georgia,serif;font-weight:800;line-height:1.05;margin:0}
+h1{font-size:clamp(2.8rem,8.5vw,6.2rem)}
+h2{font-size:clamp(1.9rem,4.6vw,3.3rem);margin-bottom:.3em}
+p{margin:.4em 0;max-width:36em}
+.lead{color:var(--mute);margin:0 0 1rem}
 .mute{color:var(--mute)}.gold{color:var(--gold)}.hot{color:var(--hot)}
-.deck{position:relative;height:calc(100% - 6.4rem)}
-.slide{position:absolute;inset:0;padding:clamp(1.2rem,4vw,3.5rem);padding-bottom:1rem;overflow-y:auto;opacity:0;visibility:hidden;transition:opacity .35s}
-.slide.on{opacity:1;visibility:visible}
-.wrap{max-width:62rem;margin:0 auto}
-button{font:inherit;color:inherit;cursor:pointer}
-.btn{background:var(--gold);color:var(--onGold);border:0;border-radius:999px;padding:.8em 1.9em;font-weight:600;margin-top:.8em;min-height:3.4rem}
-.btn.ghost{background:transparent;color:var(--ink);border:2px solid var(--line)}
+button{font:inherit;color:inherit;cursor:pointer;-webkit-tap-highlight-color:transparent}
 :focus-visible{outline:3px solid var(--gold);outline-offset:3px}
-.panel{background:var(--panel);border-radius:1.1rem;padding:1.2rem 1.4rem}
-.bar{position:fixed;left:0;right:0;bottom:0;height:calc(6.4rem + env(safe-area-inset-bottom,0px));padding-bottom:env(safe-area-inset-bottom,0px);display:flex;flex-direction:column;align-items:center;justify-content:center;gap:.35rem;background:var(--bg);border-top:1px solid var(--line)}.ctl{display:flex;align-items:center;gap:1.4rem}.credit{font-size:1rem;font-weight:600;color:var(--mute);text-align:center;padding:0 1rem}
-.nav{width:3.6rem;height:3.6rem;border-radius:50%;border:2px solid var(--line);background:var(--panel);font-size:1.3rem}
+body::before{content:"";position:fixed;inset:0;z-index:-1;pointer-events:none;opacity:.55;background-image:radial-gradient(1.5px 1.5px at 20px 30px,#fff,transparent),radial-gradient(1px 1px at 90px 120px,#fff,transparent),radial-gradient(1.5px 1.5px at 160px 60px,#ffd9a0,transparent),radial-gradient(1px 1px at 230px 180px,#fff,transparent),radial-gradient(1.5px 1.5px at 300px 90px,#fff,transparent),radial-gradient(1px 1px at 60px 220px,#cfe0ff,transparent);background-size:340px 260px}
+/* top bar */
+.top{flex:none;display:flex;align-items:center;gap:1rem;padding:.6rem clamp(1rem,3vw,2.5rem);border-bottom:1px solid var(--bd);background:rgba(7,11,26,.0)}
+.brand{display:flex;align-items:center;gap:.7rem;min-width:0;flex:0 1 20rem;font-weight:600}
+.brand span{overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.navc{flex:1;display:flex;align-items:center;gap:.9rem}
+.nav{flex:none;width:3.4rem;height:3.4rem;border-radius:50%;border:2px solid var(--bd);background:var(--panel);font-size:1.6rem;line-height:1}
 .nav:disabled{opacity:.3;cursor:default}
-.dots{display:flex;gap:.6rem}
-.dot{width:1.1rem;height:1.1rem;border-radius:50%;border:0;padding:0;background:var(--line)}
-.dot.on{background:var(--gold);transform:scale(1.3)}
+.count{flex:none;margin-left:auto;font-weight:600;color:var(--mute);min-width:4.5rem;text-align:right}
+@media(max-width:760px){.brand span{display:none}.brand{flex:none}}
+.rail{position:fixed;bottom:calc(3.6rem + env(safe-area-inset-bottom,0px));right:.7rem;z-index:5;display:flex;flex-direction:column;align-items:center;gap:.5rem;padding:.6rem .4rem;background:var(--panel);border:1px solid var(--bd);border-radius:2rem;box-shadow:0 6px 24px rgba(0,0,0,.35);--h:clamp(7rem,28vh,16rem)}
+.vwrap{position:relative;width:3rem;height:var(--h)}
+.vwrap .rg{position:absolute;top:50%;left:50%;width:var(--h);transform:translate(-50%,-50%) rotate(90deg)}
+.swap{width:2.6rem;height:2.6rem;border-radius:50%;border:2px solid var(--bd);background:transparent;font-size:1.1rem;line-height:1}
+.nav{font-size:1.25rem}
+.rail .compass{position:absolute;display:none;grid-template:repeat(3,3.3rem)/repeat(3,3.3rem);gap:.3rem;background:var(--panel);border:1px solid var(--bd);border-radius:1.3rem;padding:.5rem;box-shadow:0 8px 28px rgba(0,0,0,.5);backdrop-filter:blur(8px);z-index:6}
+.compass.on{display:grid}
+.compass button{border-radius:50%;border:2px solid var(--bd);background:var(--panel);font-weight:800;font-size:1.1rem}
+.compass button[aria-pressed="true"]{background:var(--gold);color:var(--onGold);border-color:var(--gold)}
+.compass .cn{grid-area:1/2}.compass .cw{grid-area:2/1}.compass .ce{grid-area:2/3}.compass .cs{grid-area:3/2}.compass i{grid-area:2/2;display:flex;align-items:center;justify-content:center;color:var(--mute);font-style:normal}
+body[data-side="w"] .rail{right:auto;left:.7rem}
+body[data-side="n"] .rail,body[data-side="s"] .rail{flex-direction:row;left:50%;right:auto;transform:translateX(-50%);padding:.4rem .8rem;--w:clamp(9rem,38vw,30rem)}
+body[data-side="n"] .rail{top:calc(4.8rem + env(safe-area-inset-top,0px));bottom:auto}
+body[data-side="n"] .vwrap,body[data-side="s"] .vwrap{width:var(--w);height:3rem}
+body[data-side="n"] .vwrap .rg,body[data-side="s"] .vwrap .rg{width:100%;left:0;transform:translateY(-50%)}
+body[data-side="e"] .compass{right:calc(100% + .6rem);top:0}
+body[data-side="w"] .compass{left:calc(100% + .6rem);top:0}
+body[data-side="n"] .compass{top:calc(100% + .6rem);left:0}
+body[data-side="s"] .compass{bottom:calc(100% + .6rem);left:0}
+body[data-side="e"] .slide{padding-right:calc(clamp(1.1rem,3.5vw,3rem) + 5rem)}
+body[data-side="w"] .slide{padding-left:calc(clamp(1.1rem,3.5vw,3rem) + 5rem)}
+body[data-side="n"] .slide{padding-top:calc(clamp(1.1rem,3.5vw,3rem) + 4.6rem)}
+body[data-side="s"] .slide{padding-bottom:calc(clamp(1.1rem,3.5vw,3rem) + 4.6rem)}
+/* sliders */
+.rg{-webkit-appearance:none;appearance:none;width:100%;height:2.6rem;background:transparent;margin:0;cursor:pointer;--p:0%}
+.rg::-webkit-slider-runnable-track{height:.55rem;border-radius:99px;background:linear-gradient(90deg,var(--gold) var(--p),var(--bd) var(--p))}
+.rg::-moz-range-track{height:.55rem;border-radius:99px;background:linear-gradient(90deg,var(--gold) var(--p),var(--bd) var(--p))}
+.rg::-webkit-slider-thumb{-webkit-appearance:none;width:1.9rem;height:1.9rem;border-radius:50%;background:var(--gold);border:3px solid var(--bg);margin-top:-.65rem;box-shadow:0 0 0 2px var(--gold)}
+.rg::-moz-range-thumb{width:1.5rem;height:1.5rem;border-radius:50%;background:var(--gold);border:3px solid var(--bg);box-shadow:0 0 0 2px var(--gold)}
+/* deck */
+.deck{position:relative;flex:1;min-height:0}
+.slide{position:absolute;inset:0;padding:clamp(1.1rem,3.5vw,3rem);overflow-y:auto;opacity:0;visibility:hidden;transition:opacity .35s}
+.slide.on{opacity:1;visibility:visible}
+.wrap{max-width:66rem;margin:0 auto}
+.foot{flex:none;text-align:center;padding:.55rem 1rem;border-top:1px solid var(--bd);font-weight:600;color:var(--mute);font-size:1.02rem}
+.foot b{color:var(--gold)}
+.btn{background:var(--gold);color:var(--onGold);border:0;border-radius:999px;padding:.8em 1.9em;font-weight:600;margin-top:.8em;min-height:3.4rem}
+.btn.ghost{background:transparent;color:var(--ink);border:2px solid var(--bd)}
+.panel{background:var(--panel);border:1px solid var(--bd);border-radius:1.25rem;padding:1.2rem 1.5rem}
 .hero{display:flex;gap:2rem;align-items:center;justify-content:space-between;min-height:100%;flex-wrap:wrap}
-.hero svg{width:min(42vh,80vw);flex:none}
+.hero svg{width:min(40vh,75vw);flex:none}
+.chips{display:flex;gap:.5rem;flex-wrap:wrap;margin:1rem 0}
+.chips span,.chips button{background:var(--panel);border:1px solid var(--bd);border-radius:999px;padding:.35em 1em;font-size:.9em}
+.chips button{min-height:3rem;padding:.5em 1.2em;border-width:2px}
 .two{display:grid;grid-template-columns:1fr 1fr;gap:2rem;align-items:center}
-@media(max-width:720px){.two{grid-template-columns:1fr}}
-.num{font-size:clamp(3rem,10vw,6rem);color:var(--gold)}
-#orbit{width:100%;max-width:26rem;margin:0 auto;display:block}
+@media(max-width:760px){.two{grid-template-columns:1fr}}
+.num{font-size:clamp(3rem,9vw,5.5rem);color:var(--gold)}
+svg.vis{width:100%;max-width:25rem;margin:0 auto;display:block}
 .tl{display:flex;gap:.6rem;flex-wrap:wrap;margin-bottom:1rem}
-.tl button{background:var(--panel);border:2px solid var(--line);border-radius:.8rem;padding:.7em 1.2em;min-height:3.4rem;font-weight:600}
+.tl button{background:var(--panel);border:2px solid var(--bd);border-radius:.8rem;padding:.65em 1.2em;min-height:3.4rem;font-weight:600}
 .tl button[aria-pressed="true"]{background:var(--gold);color:var(--onGold);border-color:var(--gold)}
-#tlBody{min-height:9rem}
-#tlBody b{font-size:1.5em;font-family:"Bricolage Grotesque",Cambria,serif}
+.body{min-height:9.5rem}
+.body b.hd{font-size:1.45em;color:var(--gold);display:block;margin-bottom:.2em}
 .cal{display:grid;grid-template-columns:repeat(7,1fr);gap:.4rem;max-width:28rem}
-.cal div{background:var(--panel);border-radius:.5rem;padding:.45em 0;text-align:center;font-weight:600;transition:all .5s}
-.cal .h{background:none;color:var(--mute);font-weight:400}
+.cal div{background:var(--panel);border:1px solid var(--bd);border-radius:.5rem;padding:.45em 0;text-align:center;font-weight:600;transition:all .5s}
+.cal .h{background:none;border:0;color:var(--mute);font-weight:400}
 .cal .gone{opacity:0;transform:scale(.4)}
-.cal .moved{background:var(--gold);color:var(--onGold)}
-input[type=number]{font:inherit;width:6.5em;padding:.4em .6em;border-radius:.6rem;border:2px solid var(--line);background:var(--panel);color:var(--ink)}
-.chips{display:flex;gap:.5rem;flex-wrap:wrap;margin:.7rem 0}
-.chips button{background:var(--panel);border:2px solid var(--line);border-radius:999px;padding:.5em 1.2em;min-height:3rem}.opt{display:block;width:100%;text-align:left;background:var(--panel);border:2px solid var(--line);border-radius:1rem;padding:.8em 1.1em;margin:.6rem 0;min-height:3.4rem}.opt.ok{border-color:#2FBF71;background:rgba(47,191,113,.18)}.opt.bad{border-color:var(--hot);background:rgba(255,107,53,.16)}#sea{width:100%;max-width:26rem;margin:0 auto;display:block}#ear{transition:transform .8s}
-.verdict{font-family:"Bricolage Grotesque",Cambria,serif;font-weight:800;font-size:clamp(1.6rem,4vw,2.4rem)}
-.steps div{padding:.2em 0}
-input[type=range]{width:100%;accent-color:var(--gold);margin:.6rem 0 1.2rem}
-.row{margin:.9rem 0}
-.track{height:1.1rem;background:var(--panel);border-radius:999px;overflow:hidden;margin-top:.3rem}
+.cal .moved{background:var(--gold);color:var(--onGold);border-color:var(--gold)}
+input[type=number],input[type=date]{font:inherit;padding:.5em .7em;min-height:3.2rem;border-radius:.7rem;border:2px solid var(--bd);background:var(--panel);color:var(--ink);max-width:100%}
+input[type=number]{width:7em}
+.verdict{font-family:"Bricolage Grotesque",Cambria,serif;font-weight:800;font-size:clamp(1.5rem,3.6vw,2.3rem)}
+.row{margin:.8rem 0}
+.track{height:1.1rem;background:var(--panel);border:1px solid var(--bd);border-radius:999px;overflow:hidden;margin-top:.3rem}
 .fill{height:100%;background:var(--gold);border-radius:999px;transition:width .15s}
 .cards{display:grid;grid-template-columns:repeat(3,1fr);gap:1rem}
-@media(max-width:720px){.cards{grid-template-columns:1fr}}
-.card{text-align:left;background:var(--panel);border:2px solid var(--line);border-radius:1.1rem;padding:1.1rem 1.3rem;min-height:8.5rem}
-.card b{font-family:"Bricolage Grotesque",Cambria,serif;font-size:1.5em;color:var(--gold);display:block}
+@media(max-width:760px){.cards{grid-template-columns:1fr}}
+.card{text-align:left;background:var(--panel);border:2px solid var(--bd);border-radius:1.15rem;padding:1.1rem 1.3rem;min-height:8.5rem}
+.card b{font-family:"Bricolage Grotesque",Cambria,serif;font-size:1.45em;color:var(--gold);display:block}
+.card em{font-style:normal;display:block;font-size:1.6em;font-weight:600}
 .card span{display:none;margin-top:.4em}
 .card[aria-expanded="true"]{border-color:var(--gold)}
 .card[aria-expanded="true"] span{display:block}
-.card i{font-style:normal;color:var(--mute)}
+.card i{font-style:normal;color:var(--mute);font-size:.9em}
 .card[aria-expanded="true"] i{display:none}
-#closer{font-family:"Bricolage Grotesque",Cambria,serif;font-weight:800;font-size:clamp(1.7rem,5vw,3.2rem);color:var(--gold);margin-top:1.4rem;line-height:1.1}
-@media(prefers-reduced-motion:reduce){#ear,.slide,.cal div,.fill{transition:none}}
+.opt{display:block;width:100%;text-align:left;background:var(--panel);border:2px solid var(--bd);border-radius:1rem;padding:.8em 1.1em;margin:.6rem 0;min-height:3.4rem}
+.opt.ok{border-color:var(--ok);background:rgba(47,191,113,.18)}.opt.bad{border-color:var(--hot);background:rgba(255,107,53,.16)}
+.stats{display:grid;grid-template-columns:repeat(2,1fr);gap:.8rem;margin-top:1rem}
+.stats div{background:var(--panel);border:1px solid var(--bd);border-radius:1rem;padding:.8rem 1rem}
+.stats strong{display:block;font-family:"Bricolage Grotesque",Cambria,serif;font-size:1.5em;color:var(--gold)}
+#ear{transition:transform .8s}
+#closer{font-family:"Bricolage Grotesque",Cambria,serif;font-weight:800;font-size:clamp(1.7rem,5vw,3.2rem);color:var(--gold);margin:1.2rem 0;line-height:1.1}
+@media(prefers-reduced-motion:reduce){.slide,.cal div,.fill,#ear{transition:none}}
 </style>
 </head>
 <body>
+<svg width="0" height="0" style="position:absolute" aria-hidden="true"><symbol id="logo" viewBox="0 0 64 64"><rect x="4" y="10" width="56" height="50" rx="11" fill="var(--panel)" stroke="var(--gold)" stroke-width="3"/><rect x="4" y="10" width="56" height="17" rx="11" fill="var(--gold)"/><rect x="4" y="19" width="56" height="8" fill="var(--gold)"/><rect x="17" y="3" width="5" height="14" rx="2.5" fill="var(--ink)"/><rect x="42" y="3" width="5" height="14" rx="2.5" fill="var(--ink)"/><circle cx="32" cy="44" r="7" fill="var(--gold)"/><g stroke="var(--gold)" stroke-width="2.6" stroke-linecap="round"><line x1="32" y1="30.5" x2="32" y2="33.5" transform="rotate(0 32 44)"/><line x1="32" y1="30.5" x2="32" y2="33.5" transform="rotate(45 32 44)"/><line x1="32" y1="30.5" x2="32" y2="33.5" transform="rotate(90 32 44)"/><line x1="32" y1="30.5" x2="32" y2="33.5" transform="rotate(135 32 44)"/><line x1="32" y1="30.5" x2="32" y2="33.5" transform="rotate(180 32 44)"/><line x1="32" y1="30.5" x2="32" y2="33.5" transform="rotate(225 32 44)"/><line x1="32" y1="30.5" x2="32" y2="33.5" transform="rotate(270 32 44)"/><line x1="32" y1="30.5" x2="32" y2="33.5" transform="rotate(315 32 44)"/></g></symbol></svg>
+<header class="top">
+ <div class="brand"><svg width="40" height="40" aria-hidden="true"><use href="#logo"/></svg><span id="ttl">The Solar Calendar</span></div>
+
+ <div class="count" id="cnt" aria-live="polite">1 / 16</div>
+</header>
 <main class="deck">
 
-<section class="slide on" aria-label="Title"><div class="wrap hero">
- <div><h1>The Solar<br>Calendar</h1><p class="mute">How humanity squeezed the Sun into 365 boxes. Twelve slides, and you get to touch most of them.</p><button class="btn" data-go="1">Start</button></div>
+<section class="slide on" aria-label="The Solar Calendar"><div class="wrap hero">
+ <div><svg width="96" height="96" aria-hidden="true" style="display:block;margin-bottom:1rem"><use href="#logo"/></svg><h1>The Solar<br>Calendar</h1><p class="lead">How the Sun, Earth and Moon decide our days, months and years. Made for CBSE Class 8.</p>
+ <div class="chips"><span>Rotation</span><span>Revolution</span><span>Seasons</span><span>Moon phases</span><span>Leap years</span></div><button class="btn" id="start">Start the journey</button><p class="mute" style="font-size:.85em">Tip: use the slider and arrows on the control bar, or the keyboard arrow keys. Tap the ✥ button to move the bar to N, S, E or W.</p></div>
  <svg viewBox="0 0 400 400" aria-hidden="true"><circle cx="200" cy="200" r="190" fill="var(--gold)" opacity=".12"/><circle cx="200" cy="200" r="140" fill="var(--gold)" opacity=".28"/><circle cx="200" cy="200" r="90" fill="var(--gold)"/><text x="200" y="208" text-anchor="middle" font-family="Bricolage Grotesque,Cambria,serif" font-weight="800" font-size="26" fill="var(--onGold)">365.2422</text></svg>
 </div></section>
 
-<section class="slide" aria-label="A year is not 365 days"><div class="wrap two">
- <div><h2>A year isn’t 365 days</h2><div class="num">365.2422</div><p>days for Earth to circle the Sun once. We cruise at 30 km/s and cover 940 million km per lap.</p><button class="btn" id="run">Run one year</button><p id="orbitNote" class="mute" aria-live="polite">Press the button and watch the calendar count.</p></div>
- <svg id="orbit" viewBox="0 0 400 400" role="img" aria-label="Earth orbiting the Sun"><circle cx="200" cy="200" r="150" fill="none" stroke="var(--line)" stroke-width="2" stroke-dasharray="4 8"/><circle cx="200" cy="200" r="46" fill="var(--gold)"/><circle id="earth" cx="200" cy="50" r="14" fill="#5B9BFF"/><text id="day" x="200" y="210" text-anchor="middle" font-family="Bricolage Grotesque,Cambria,serif" font-weight="800" font-size="30" fill="var(--onGold)">Day 0</text></svg>
+<section class="slide" aria-label="Nature’s three clocks"><div class="wrap"><h2>Nature’s three clocks</h2><p class="lead">Every calendar is built from three cosmic movements. Tap each card.</p><div class="cards" id="clocks"></div></div></section>
+
+<section class="slide" aria-label="Revolution: one year"><div class="wrap two">
+ <div><h2>A year isn’t 365 days</h2><div class="num">365.2422</div><p>days for Earth to complete one <b>revolution</b> around the Sun. We travel at 30 km/s and cover about 940 million km every lap.</p><button class="btn" id="run">Run one year</button><p id="orbitNote" class="mute" aria-live="polite">Press the button and watch the days count.</p></div>
+ <svg id="orbit" class="vis" viewBox="0 0 400 400" role="img" aria-label="Earth orbiting the Sun"><circle cx="200" cy="200" r="150" fill="none" stroke="var(--bd)" stroke-width="2" stroke-dasharray="4 8"/><circle cx="200" cy="200" r="46" fill="var(--gold)"/><circle id="earth" cx="200" cy="50" r="14" fill="#5B9BFF"/><text id="day" x="200" y="210" text-anchor="middle" font-family="Bricolage Grotesque,Cambria,serif" font-weight="800" font-size="30" fill="var(--onGold)">Day 0</text></svg>
 </div></section>
 
-<section class="slide" aria-label="Seasons"><div class="wrap two"><div><h2>Why do we get seasons?</h2><p class="mute">Tap a date to move Earth.</p><div class="tl" id="seaTabs"></div><div class="panel" id="seaBody" aria-live="polite"></div></div>
-<svg id="sea" viewBox="0 0 400 400" role="img" aria-label="Earth with tilted axis at four points of its orbit"><ellipse cx="200" cy="200" rx="140" ry="90" fill="none" stroke="var(--line)" stroke-width="2" stroke-dasharray="4 8"/><circle cx="200" cy="200" r="36" fill="var(--gold)"/><g id="ear" transform="translate(200,290)"><g transform="rotate(23.4)"><line x1="0" y1="-38" x2="0" y2="38" stroke="var(--ink)" stroke-width="3"/><text x="0" y="-46" text-anchor="middle" font-size="16" font-weight="600" fill="var(--ink)">N</text></g><circle r="22" fill="#5B9BFF"/></g></svg></div></section>
-<section class="slide" aria-label="Timeline"><div class="wrap"><h2>5,000 years, one bug</h2><p class="mute">Tap a date.</p><div class="tl" id="tl"></div><div class="panel" id="tlBody" aria-live="polite"></div></div></section>
+<section class="slide" aria-label="Why we get seasons"><div class="wrap two"><div><h2>Why do we get seasons?</h2><p class="lead">Earth’s axis is tilted about 23.5° and always points toward the Pole Star. Tap a month to move Earth.</p><div class="tl" id="seaTabs"></div><div class="panel body" id="seaBody" aria-live="polite"></div></div>
+<svg id="sea" class="vis" viewBox="0 0 400 400" role="img" aria-label="Earth with tilted axis at four points of its orbit"><ellipse cx="200" cy="200" rx="140" ry="90" fill="none" stroke="var(--bd)" stroke-width="2" stroke-dasharray="4 8"/><circle cx="200" cy="200" r="36" fill="var(--gold)"/><g id="ear" transform="translate(200,290)"><g transform="rotate(23.4)"><line x1="0" y1="-38" x2="0" y2="38" stroke="var(--ink)" stroke-width="3"/><text x="0" y="-46" text-anchor="middle" font-size="16" font-weight="600" fill="var(--ink)">N</text></g><circle r="22" fill="#5B9BFF"/></g></svg></div></section>
 
-<section class="slide" aria-label="Vanished days"><div class="wrap two">
- <div><h2>10 days that never happened</h2><p>In October 1582 the calendar had drifted 10 days off the seasons. Pope Gregory fixed it with one decree: Thursday 4 October was followed by Friday 15 October.</p><button class="btn" id="reform">Apply the reform</button> <button class="btn ghost" id="undo">Reset</button><p class="mute" id="reformNote" aria-live="polite"></p></div>
- <div><div class="cal" id="cal"></div></div>
-</div></section>
+<section class="slide" aria-label="Phases of the Moon"><div class="wrap two"><div><h2>Phases of the Moon</h2><p class="lead">The Moon takes about 29.5 days to go from one new moon to the next. Lunar calendars count these months.</p>
+ <label for="mage" class="mute">Moon age: <b class="gold" id="mageOut">0.0</b> days</label><input class="rg" id="mage" type="range" min="0" max="29.5" step="0.1" value="0">
+ <button class="btn" id="mplay">Play the month</button>
+ <div class="stats"><div><strong id="mname">New Moon</strong>phase</div><div><strong id="mlit">0%</strong>lit up</div></div>
+ <p class="mute">12 lunar months = about 354 days, which is 11 days short of the Sun’s year.</p></div>
+ <svg id="moon" class="vis" viewBox="0 0 300 300" role="img" aria-label="Moon phase"><circle cx="150" cy="150" r="124" fill="#1B2347" stroke="var(--bd)" stroke-width="2"/><g transform="translate(150,150)"><path id="lit" fill="#F3EBD2"/></g></svg></div></section>
 
-<section class="slide" aria-label="Leap year checker"><div class="wrap"><h2>The leap-year hack</h2><p>Every 4th year gets a leap day, with two exceptions. Try any year.</p>
+<section class="slide" aria-label="Solar, lunar or both"><div class="wrap"><h2>Solar, lunar or both?</h2><p class="lead">There are three kinds of calendars. Tap a type.</p><div class="tl" id="typeTabs"></div><div class="panel body" id="typeBody" aria-live="polite"></div></div></section>
+
+<section class="slide" aria-label="5,000 years of calendars"><div class="wrap"><h2>5,000 years, one bug</h2><p class="lead">People kept fixing the same problem. Tap a date.</p><div class="tl" id="tl"></div><div class="panel body" id="tlBody" aria-live="polite"></div></div></section>
+
+<section class="slide" aria-label="The days that vanished"><div class="wrap two">
+ <div><h2>10 days that never happened</h2><p>By 1582 the calendar had drifted 10 days away from the seasons. Pope Gregory XIII fixed it: Thursday 4 October was followed by Friday 15 October.</p><button class="btn" id="reform">Apply the reform</button> <button class="btn ghost" id="undo">Reset</button><p class="mute" id="reformNote" aria-live="polite"></p></div>
+ <div><div class="cal" id="cal"></div></div></div></section>
+
+<section class="slide" aria-label="Leap years"><div class="wrap"><h2>The leap-year hack</h2><p class="lead">Earth’s year is 0.2422 day longer than 365. Over 4 years: 4 × 0.2422 = 0.9688, almost 1 whole day. So we add 29 February. Try any year.</p>
  <label for="yr" class="mute">Year </label><input id="yr" type="number" value="2100" min="1" max="99999">
  <div class="chips" id="chips"></div>
- <div class="panel"><div class="steps" id="steps"></div><div class="verdict" id="verdict"></div></div>
-</div></section>
+ <div class="panel"><div id="steps"></div><div class="verdict" id="verdict"></div><p class="mute" id="nextLeap"></p></div>
+ <p class="mute">Rule: divisible by 4 is a leap year, unless divisible by 100, unless also divisible by 400.</p></div></section>
 
-<section class="slide" aria-label="Drift"><div class="wrap"><h2>What if we ignored the leftover?</h2><p>Drag to see how far each calendar slides off the seasons.</p>
+<section class="slide" aria-label="Calendar drift"><div class="wrap"><h2>What if we ignored the leftover?</h2><p class="lead">Drag to see how far each calendar slides away from the seasons.</p>
  <label for="yrs" class="mute">After <b id="yrsOut" class="gold">500</b> years</label>
- <input id="yrs" type="range" min="1" max="3000" value="500">
- <div id="bars"></div><p class="mute">Bars are capped at 120 days, about one season.</p>
-</div></section>
+ <input class="rg" id="yrs" type="range" min="1" max="3000" value="500">
+ <div id="bars"></div><p class="mute">Bars stop at 120 days, about one season. At 500 years the plain 365-day calendar would put summer in winter.</p></div></section>
 
-<section class="slide" aria-label="Types of calendars"><div class="wrap"><h2>Solar, lunar or both?</h2><p class="mute">Tap a type.</p><div class="tl" id="typeTabs"></div><div class="panel" id="typeBody" aria-live="polite"></div></div></section>
-<section class="slide" aria-label="Other calendars"><div class="wrap"><h2>Other suns, other calendars</h2>
- <p class="mute">Tap a card.</p><div class="cards" id="cards"></div></div></section>
-<section class="slide" aria-label="Mind-blowing facts"><div class="wrap"><h2>Six mind-blowing facts</h2><p class="mute">Tap a tile to flip it.</p><div class="cards" id="facts"></div></div></section>
+<section class="slide" aria-label="Calendars of India and the world"><div class="wrap"><h2>Calendars of India and the world</h2><p class="lead">Tap a card.</p><div class="cards" id="cards"></div></div></section>
+
+<section class="slide" aria-label="Your date explorer"><div class="wrap two">
+ <div><h2>Your date explorer</h2><p class="lead">Pick your date of birth.</p><input type="date" id="dob" value="2013-08-15" aria-label="Date of birth"><div class="stats" id="dobOut" aria-live="polite"></div></div>
+ <div><h2>Year converter</h2><p class="lead">Type a Gregorian year.</p><input type="number" id="gy" min="1" max="3999" aria-label="Gregorian year"><div class="stats" id="gyOut" aria-live="polite"></div></div></div></section>
+
+<section class="slide" aria-label="Six mind-blowing facts"><div class="wrap"><h2>Six mind-blowing facts</h2><p class="lead">Tap a tile to flip it.</p><div class="cards" id="facts"></div></div></section>
+
+<section class="slide" aria-label="Key words"><div class="wrap"><h2>Key words</h2><p class="lead">Revise the vocabulary. Tap a word.</p><div class="tl" id="kwTabs"></div><div class="panel body" id="kwBody" aria-live="polite"></div></div></section>
+
 <section class="slide" aria-label="Quiz"><div class="wrap"><h2>Quick quiz</h2><div class="panel" id="qBox" aria-live="polite"></div></div></section>
-<section class="slide" aria-label="Finish"><div class="wrap"><h2>What to remember</h2><div class="panel"><p>Earth’s year is 365.2422 days, not 365.</p><p>Leap years fix most of the gap. The 100 and 400 rules fix the rest.</p><p>The Gregorian calendar stays within one day for about 3,000 years.</p></div><div id="closer">Every date you write is a bet on the Sun.</div><p class="mute">Thank you for watching.</p><button class="btn ghost" data-go="0">Back to start</button></div></section>
+
+<section class="slide" aria-label="What to remember"><div class="wrap"><h2>What to remember</h2><div class="panel"><p>Rotation makes a day (24 hours). The Moon makes a month (29.5 days). Revolution makes a year (365.2422 days).</p><p>Earth’s tilt, not its distance from the Sun, causes the seasons.</p><p>Leap years fix the extra quarter day. The 100 and 400 rules fix the rest, so the Gregorian calendar stays within one day for about 3,000 years.</p></div><div id="closer">Every date you write is a bet on the Sun.</div><svg width="72" height="72" aria-hidden="true" style="display:block"><use href="#logo"/></svg><p class="mute">Thank you for watching.</p><button class="btn ghost" id="again">Back to start</button></div></section>
 
 </main>
-<nav class="bar" aria-label="Slides"><div class="ctl"><button class="nav" id="prev" aria-label="Previous slide">&lsaquo;</button><div class="dots" id="dots"></div><button class="nav" id="next" aria-label="Next slide">&rsaquo;</button></div><div class="credit">Made by 9A students Ayush Manker</div></nav>
+<nav class="rail" aria-label="Slide controls"><div class="compass" id="compass" role="group" aria-label="Place the controls"><button class="cn" data-s="n" aria-label="Top (North)">N</button><button class="cw" data-s="w" aria-label="Left (West)">W</button><i aria-hidden="true">&#10021;</i><button class="ce" data-s="e" aria-label="Right (East)">E</button><button class="cs" data-s="s" aria-label="Bottom (South)">S</button></div><button class="swap" id="swap" aria-label="Move the slide controls. Choose N, S, E or W." aria-expanded="false" title="Move controls (N S E W)">&#10021;</button><button class="nav" id="prev" aria-label="Previous slide">&#9650;</button><div class="vwrap"><input class="rg" id="rng" type="range" min="0" max="15" step="1" value="0" aria-orientation="vertical" aria-label="Slide navigator. Use arrow keys to change slide."></div><button class="nav" id="next" aria-label="Next slide">&#9660;</button></nav>
+<footer class="foot">Made by 9A students <b>Ayush Manker</b></footer>
 
 <script>
 (function(){
 var $=function(s){return document.querySelector(s)};
-var slides=[].slice.call(document.querySelectorAll('.slide')),cur=0,dots=$('#dots');
-slides.forEach(function(s,k){var d=document.createElement('button');d.className='dot';d.setAttribute('aria-label','Slide '+(k+1));d.onclick=function(){go(k)};dots.appendChild(d)});
-function go(n){cur=Math.max(0,Math.min(slides.length-1,n));slides.forEach(function(s,k){s.classList.toggle('on',k===cur);s.setAttribute('aria-hidden',k!==cur)});[].forEach.call(dots.children,function(d,k){d.classList.toggle('on',k===cur)});$('#prev').disabled=cur===0;$('#next').disabled=cur===slides.length-1;slides[cur].scrollTop=0}
+var slides=[].slice.call(document.querySelectorAll('.slide')),N=slides.length,cur=0,rng=$('#rng');
+rng.max=N-1;
+function pct(el){el.style.setProperty('--p',((el.value-el.min)/(el.max-el.min)*100)+'%')}
+function go(n){cur=Math.max(0,Math.min(N-1,n));slides.forEach(function(s,k){s.classList.toggle('on',k===cur);s.setAttribute('aria-hidden',k!==cur)});rng.value=cur;pct(rng);$('#prev').disabled=cur===0;$('#next').disabled=cur===N-1;$('#cnt').textContent=(cur+1)+' / '+N;$('#ttl').textContent=slides[cur].getAttribute('aria-label');slides[cur].scrollTop=0}
+rng.oninput=function(){go(+rng.value)};
 $('#prev').onclick=function(){go(cur-1)};$('#next').onclick=function(){go(cur+1)};
-[].forEach.call(document.querySelectorAll('[data-go]'),function(b){b.onclick=function(){go(+b.dataset.go)}});
-document.addEventListener('keydown',function(e){if(/INPUT|TEXTAREA/.test(e.target.tagName)&&e.key!=='Escape'&&e.target.type!=='range')return;if(e.key==='ArrowRight'||e.key==='PageDown')go(cur+1);if(e.key==='ArrowLeft'||e.key==='PageUp')go(cur-1)});
-var sx=null;document.addEventListener('touchstart',function(e){sx=e.target.type==='range'?null:e.touches[0].clientX},{passive:true});
-document.addEventListener('touchend',function(e){if(sx===null)return;var dx=e.changedTouches[0].clientX-sx;if(Math.abs(dx)>70)go(cur+(dx<0?1:-1));sx=null},{passive:true});
-go(0);
+$('#start').onclick=function(){go(1)};$('#again').onclick=function(){go(0)};
+document.addEventListener('keydown',function(e){var t=e.target;if(t===rng||/INPUT|TEXTAREA/.test(t.tagName))return;if(e.key==='ArrowRight'||e.key==='PageDown'||e.key==='ArrowDown')go(cur+1);else if(e.key==='ArrowLeft'||e.key==='PageUp'||e.key==='ArrowUp')go(cur-1);else if(e.key==='Home')go(0);else if(e.key==='End')go(N-1)});
+var sx=null;document.addEventListener('touchstart',function(e){sx=/INPUT/.test(e.target.tagName)?null:e.touches[0].clientX},{passive:true});
+document.addEventListener('touchend',function(e){if(sx===null)return;var dx=e.changedTouches[0].clientX-sx;if(Math.abs(dx)>80)go(cur+(dx<0?1:-1));sx=null},{passive:true});
+
+function tabs(el,body,items,fmt){items.forEach(function(e,k){var b=document.createElement('button');b.textContent=e[0];b.setAttribute('aria-pressed','false');b.onclick=function(){[].forEach.call(el.children,function(x,j){x.setAttribute('aria-pressed',j===k)});body.innerHTML=fmt(e);if(e.cb)e.cb()};el.appendChild(b)});el.children[0].click()}
+function flips(el,items,big){items.forEach(function(o){var b=document.createElement('button');b.className='card';b.setAttribute('aria-expanded','false');b.innerHTML='<b>'+o[0]+'</b>'+(big?'<em>'+o[2]+'</em>':'')+'<i>Tap to open</i><span>'+o[1]+'</span>';b.onclick=function(){b.setAttribute('aria-expanded',b.getAttribute('aria-expanded')!=='true')};el.appendChild(b)})}
+
+/* clocks */
+flips($('#clocks'),[['Day','Earth spins once on its axis. This is called rotation. It gives us day and night.','24 hours'],['Month','The Moon goes around the Earth once, from one new moon to the next.','29.5 days'],['Year','Earth goes around the Sun once. This is called revolution. It gives us the seasons.','365.2422 days']],true);
 
 /* orbit */
 var earth=$('#earth'),dayEl=$('#day'),running=false,reduce=matchMedia('(prefers-reduced-motion:reduce)').matches;
 function place(a){var r=a*Math.PI/180;earth.setAttribute('cx',200+150*Math.sin(r));earth.setAttribute('cy',200-150*Math.cos(r))}
 $('#run').onclick=function(){if(running)return;running=true;var t0=null,dur=reduce?1:5000;$('#orbitNote').textContent='Counting…';
  function step(t){if(t0===null)t0=t;var p=Math.min((t-t0)/dur,1);place(360*p*365/365.2422);dayEl.textContent='Day '+Math.floor(365*p);
-  if(p<1)requestAnimationFrame(step);else{running=false;$('#orbitNote').textContent='Day 365 is over, but Earth is still 5 h 48 min 46 s from where it started. Do that four times and you owe the Sun almost a whole day.'}}
+  if(p<1)requestAnimationFrame(step);else{running=false;$('#orbitNote').textContent='Day 365 is over, but Earth still needs 5 h 48 min 46 s to finish the lap. Four years of leftovers make one extra day.'}}
  requestAnimationFrame(step)};
 
+/* seasons */
+var S=[['March',[200,290],'About 21 March: equinox','The Sun shines straight over the equator. Day and night are both about 12 hours everywhere.'],['June',[60,200],'About 21 June: summer solstice (north)','The north pole leans toward the Sun. Longest day in the north, shortest in the south. Summer in the north, winter in the south.'],['September',[200,110],'About 23 September: equinox','Day and night are equal again. Autumn begins in the north.'],['December',[340,200],'About 22 December: winter solstice (north)','The north leans away. Shortest day in the north. Earth is closest to the Sun in early January, so tilt makes seasons, not distance.']];
+S.forEach(function(e){e.cb=function(){$('#ear').setAttribute('transform','translate('+e[1][0]+','+e[1][1]+')')}});
+tabs($('#seaTabs'),$('#seaBody'),S,function(e){return '<b class="hd">'+e[2]+'</b><p>'+e[3]+'</p>'});
+
+/* moon */
+var R=124,mage=$('#mage'),playing=null;
+function moon(){var a=+mage.value,p=a/29.53,k=Math.cos(2*Math.PI*p),rx=Math.abs(k)*R,d;
+ if(p<.5)d='M0,-'+R+' A'+R+','+R+' 0 0 1 0,'+R+' A'+rx+','+R+' 0 0 '+(k>0?0:1)+' 0,-'+R+'Z';else d='M0,-'+R+' A'+R+','+R+' 0 0 0 0,'+R+' A'+rx+','+R+' 0 0 '+(k>0?1:0)+' 0,-'+R+'Z';
+ $('#lit').setAttribute('d',d);$('#mageOut').textContent=a.toFixed(1);$('#mlit').textContent=Math.round((1-k)/2*100)+'%';
+ $('#mname').textContent=a<1||a>28?'New Moon':a<6.4?'Waxing crescent':a<8.4?'First quarter':a<13.4?'Waxing gibbous':a<16.4?'Full Moon':a<21.4?'Waning gibbous':a<23.4?'Last quarter':'Waning crescent';pct(mage)}
+mage.oninput=moon;moon();
+$('#mplay').onclick=function(){if(playing){clearInterval(playing);playing=null;this.textContent='Play the month';return}var b=this;b.textContent='Pause';if(+mage.value>=29.4)mage.value=0;playing=setInterval(function(){var v=+mage.value+.25;if(v>=29.5){v=29.5;clearInterval(playing);playing=null;b.textContent='Play the month'}mage.value=v;moon()},90)};
+
+/* types */
+tabs($('#typeTabs'),$('#typeBody'),[['Solar','Follows the Sun','Gregorian, Persian, Egyptian and the Indian National calendar. The year is about 365.2422 days, so dates stay in the same season. Festivals like Makar Sankranti (about 14 January) and Baisakhi (13 or 14 April) are fixed by the Sun.'],['Lunar','Follows the Moon','The Islamic Hijri calendar has 12 moon months, about 354 days. It runs roughly 11 days short each year, so Ramadan and Eid move through every season in about 33 years.'],['Lunisolar','Moon months, corrected by the Sun','Hindu, Chinese and Hebrew calendars add a leap month about every 3 years (adhik maas in the Hindu calendar). That is why Diwali and Holi, set by the Moon, still stay in their seasons.']],function(e){return '<b class="hd">'+e[1]+'</b><p>'+e[2]+'</p>'});
+
 /* timeline */
-var T=[['~3200 BCE','Newgrange, Ireland','A stone tomb built so the winter-solstice sunrise floods its inner chamber with light for about 17 minutes. Calendar as architecture.'],
-['~2700 BCE','Egypt','A civil year of 12 months × 30 days plus 5 bonus days. No leap years, so it slid one day against the seasons every four years.'],
-['46 BCE','Rome','Julius Caesar adds a leap day every 4 years. To realign the calendar he stretches 46 BCE to 445 days, the “year of confusion”.'],
-['1582','Pope Gregory XIII','Caesar’s year runs 11 minutes too long. After 1,600 years the equinox had slipped about 10 days. Gregory deletes them and tightens the leap rule.'],
-['1752','Britain','The British Empire finally switches. 2 September is followed by 14 September, and 11 days vanish.']];
-var tl=$('#tl'),body=$('#tlBody');
-T.forEach(function(e,k){var b=document.createElement('button');b.textContent=e[0];b.setAttribute('aria-pressed','false');b.onclick=function(){[].forEach.call(tl.children,function(x,j){x.setAttribute('aria-pressed',j===k)});body.innerHTML='<b class="gold">'+e[0]+' · '+e[1]+'</b><p>'+e[2]+'</p>'};tl.appendChild(b)});
-tl.children[0].click();
+tabs($('#tl'),$('#tlBody'),[['~3200 BCE','Newgrange, Ireland','A stone tomb built so the winter-solstice sunrise floods its inner chamber for about 17 minutes. The calendar as architecture.'],['~2700 BCE','Egypt','A civil year of 12 months × 30 days plus 5 bonus days. No leap years, so it slid one day against the seasons every four years.'],['46 BCE','Rome','Julius Caesar adds a leap day every 4 years. To realign the calendar he makes 46 BCE last 445 days, the “year of confusion”.'],['1582','Pope Gregory XIII','Caesar’s year runs 11 minutes too long. After 1,600 years the equinox had slipped about 10 days. Gregory deletes them and tightens the leap-year rule.'],['1752','Britain','Britain and its colonies, including India, finally switch. 2 September is followed by 14 September, and 11 days vanish.'],['1957','India','India adopts the Indian National Calendar (Saka) for official use, next to the Gregorian calendar.']],function(e){return '<b class="hd">'+e[0]+' · '+e[1]+'</b><p>'+e[2]+'</p>'});
 
 /* vanished days */
 var cal=$('#cal'),cells=[];
 ['Mon','Tue','Wed','Thu','Fri','Sat','Sun'].forEach(function(d){var e=document.createElement('div');e.className='h';e.textContent=d;cal.appendChild(e)});
 for(var n=1;n<=31;n++){var c=document.createElement('div');c.textContent=n;cal.appendChild(c);cells.push(c)}
 function reform(on){cells.forEach(function(c,k){var n=k+1;c.classList.toggle('gone',on&&n>21);c.classList.toggle('moved',on&&n>=5&&n<=21);c.textContent=on&&n>=5&&n<=21?n+10:n});
- $('#reformNote').textContent=on?'Every weekday stayed in order. Only the dates jumped, so the month ran just 21 days.':'This is October 1582 before the decree.'}
+ $('#reformNote').textContent=on?'The weekdays stayed in order. Only the dates jumped, so the month had just 21 days.':'This is October 1582 before the decree.'}
 $('#reform').onclick=function(){reform(true)};$('#undo').onclick=function(){reform(false)};reform(false);
 
 /* leap year */
 var yr=$('#yr'),ch=$('#chips');
+function isL(y){return y%4===0&&(y%100!==0||y%400===0)}
 [1900,2000,2024,2100].forEach(function(y){var b=document.createElement('button');b.textContent=y;b.onclick=function(){yr.value=y;chk()};ch.appendChild(b)});
-function chk(){var y=parseInt(yr.value,10),s=$('#steps'),v=$('#verdict');if(!y||y<1){s.innerHTML='';v.textContent='Enter a year above 0.';v.className='verdict mute';return}
- var a=y%4===0,b=y%100===0,c=y%400===0,leap=a&&(!b||c);
+function chk(){var y=parseInt(yr.value,10),s=$('#steps'),v=$('#verdict');if(!y||y<1){s.innerHTML='';v.textContent='Enter a year above 0.';v.className='verdict mute';$('#nextLeap').textContent='';return}
+ var a=y%4===0,b=y%100===0,c=y%400===0,leap=isL(y);
  s.innerHTML='<div>Divisible by 4? <b>'+(a?'yes':'no')+'</b></div>'+(a?'<div>Divisible by 100? <b>'+(b?'yes':'no')+'</b></div>':'')+(a&&b?'<div>Divisible by 400? <b>'+(c?'yes':'no')+'</b></div>':'');
- v.textContent=y+(leap?' is a leap year (366 days)':' is a normal year (365 days)');v.className='verdict '+(leap?'gold':'hot')}
+ v.textContent=y+(leap?' is a leap year (366 days)':' is a normal year (365 days)');v.className='verdict '+(leap?'gold':'hot');
+ var n=y+1;while(!isL(n))n++;$('#nextLeap').textContent='Next leap year after '+y+': '+n}
 yr.oninput=chk;chk();
 
 /* drift */
-var C=[['Plain 365-day year',0.2422,'var(--hot)'],['Julian (365.25)',0.0078,'var(--gold)'],['Gregorian (365.2425)',0.0003,'var(--gold)']],bars=$('#bars');
+var C=[['Plain 365-day year',0.2422,'var(--hot)'],['Julian calendar (365.25)',0.0078,'var(--gold)'],['Gregorian calendar (365.2425)',0.0003,'var(--gold)']],bars=$('#bars');
 C.forEach(function(c){var r=document.createElement('div');r.className='row';r.innerHTML='<div><span>'+c[0]+'</span> <b class="gold" data-v></b></div><div class="track"><div class="fill" style="background:'+c[2]+'"></div></div>';bars.appendChild(r)});
-function drift(){var y=+$('#yrs').value;$('#yrsOut').textContent=y.toLocaleString();[].forEach.call(bars.children,function(r,k){var d=C[k][1]*y;r.querySelector('[data-v]').textContent=d>=10?Math.round(d)+' days off':(d.toFixed(d<1?2:1)+' days off');r.querySelector('.fill').style.width=Math.min(100,d/120*100)+'%'})}
+function drift(){var y=+$('#yrs').value;pct($('#yrs'));$('#yrsOut').textContent=y.toLocaleString();[].forEach.call(bars.children,function(r,k){var d=C[k][1]*y;r.querySelector('[data-v]').textContent=d>=10?Math.round(d)+' days off':d.toFixed(d<1?2:1)+' days off';r.querySelector('.fill').style.width=Math.min(100,d/120*100)+'%'})}
 $('#yrs').oninput=drift;drift();
 
-/* other calendars */
-var O=[['Egyptian','12 months × 30 days, plus 5 bonus days. Tied to the Nile flood and the star Sirius.'],['Maya Haab’','18 months × 20 days, plus 5 “unlucky” days at the end of the year.'],['Solar Hijri','The Persian calendar. It starts at the spring equinox, was designed in 1079, and is official in Iran and Afghanistan today.'],['Indian National','Also called the Saka calendar. Adopted in 1957, it has 365 days and starts on 22 March (21 in leap years).'],['Ethiopian','Twelve months of 30 days plus a 13th month of 5 or 6 days. It runs about 7 to 8 years behind the Gregorian year.'],['Julian, still alive','Many Orthodox churches still use it for fixed feasts, so Russian Orthodox Christmas falls on 7 January.']],cards=$('#cards');
-O.forEach(function(o){var b=document.createElement('button');b.className='card';b.setAttribute('aria-expanded','false');b.innerHTML='<b>'+o[0]+'</b><i>Tap to reveal</i><span>'+o[1]+'</span>';b.onclick=function(){b.setAttribute('aria-expanded',b.getAttribute('aria-expanded')!=='true')};cards.appendChild(b)});
-/* seasons */
-var S=[['Mar',[200,290],'About 20 March: equinox','The Sun is right over the equator. Day and night are both about 12 hours everywhere.'],['Jun',[60,200],'About 21 June: northern solstice','The north pole tilts toward the Sun. Longest day and summer in the north, shortest day and winter in the south.'],['Sep',[200,110],'About 23 September: equinox','Day and night are about equal again, and autumn begins in the north.'],['Dec',[340,200],'About 21 December: southern solstice','The north tilts away. Shortest day and winter in the north. Earth is closest to the Sun in early January, so tilt makes seasons, not distance.']],st=$('#seaTabs');
-S.forEach(function(e,k){var b=document.createElement('button');b.textContent=e[0];b.setAttribute('aria-pressed','false');b.onclick=function(){[].forEach.call(st.children,function(x,j){x.setAttribute('aria-pressed',j===k)});$('#ear').setAttribute('transform','translate('+e[1][0]+','+e[1][1]+')');$('#seaBody').innerHTML='<b class="gold">'+e[2]+'</b><p>'+e[3]+'</p>'};st.appendChild(b)});st.children[0].click();
-/* types */
-var Y=[['Solar','Follows the Sun','Gregorian, Persian and Egyptian calendars. The year is about 365.2422 days, so each date stays in the same season.'],['Lunar','Follows the Moon','The Islamic Hijri calendar has 12 moon months, about 354 days. It runs roughly 11 days short each year, so Ramadan travels through every season in about 33 years.'],['Lunisolar','Moon months, fixed by the Sun','Hindu, Chinese and Hebrew calendars add a leap month about every 3 years (adhik maas in the Hindu calendar) so festivals stay in their season.']],yt=$('#typeTabs');
-Y.forEach(function(e,k){var b=document.createElement('button');b.textContent=e[0];b.setAttribute('aria-pressed','false');b.onclick=function(){[].forEach.call(yt.children,function(x,j){x.setAttribute('aria-pressed',j===k)});$('#typeBody').innerHTML='<b class="gold">'+e[1]+'</b><p>'+e[2]+'</p>'};yt.appendChild(b)});yt.children[0].click();
+/* calendars */
+flips($('#cards'),[['Egyptian','12 months × 30 days, plus 5 bonus days. Tied to the Nile flood and the star Sirius.'],['Maya Haab’','18 months × 20 days, plus 5 “unlucky” days at the end of the year.'],['Solar Hijri','The Persian calendar. It starts at the spring equinox, was designed in 1079, and is official in Iran and Afghanistan.'],['Indian National','Also called the Saka calendar. Adopted in 1957, it has 365 days and starts on 22 March (21 in leap years).'],['Vikram Samvat','A lunisolar calendar that begins in 57 BCE. Nepal’s official calendar, Bikram Sambat, is based on it.'],['Ethiopian','Twelve months of 30 days plus a 13th month of 5 or 6 days. It runs 7 to 8 years behind the Gregorian year.']]);
+
+/* explorer */
+var now=new Date();
+function dobCalc(){var v=$('#dob').value,o=$('#dobOut');if(!v){o.innerHTML='<div>Pick a date.</div>';return}var p=v.split('-'),d=new Date(+p[0],+p[1]-1,+p[2]);if(d>now){o.innerHTML='<div>That date is in the future.</div>';return}
+ var days=Math.floor((now-d)/864e5),laps=days/365.2422,nb=new Date(now.getFullYear(),d.getMonth(),d.getDate());if(nb<new Date(now.getFullYear(),now.getMonth(),now.getDate()))nb=new Date(now.getFullYear()+1,d.getMonth(),d.getDate());
+ var left=Math.round((nb-new Date(now.getFullYear(),now.getMonth(),now.getDate()))/864e5);
+ o.innerHTML='<div><strong>'+d.toLocaleDateString('en-GB',{weekday:'long'})+'</strong>day you were born</div><div><strong>'+days.toLocaleString()+'</strong>days lived</div><div><strong>'+laps.toFixed(1)+'</strong>laps around the Sun</div><div><strong>'+(laps*0.94).toFixed(1)+' billion km</strong>travelled round the Sun</div><div><strong>'+Math.floor(days/29.53).toLocaleString()+'</strong>moon cycles seen</div><div><strong>'+left+' days</strong>to next birthday</div>'}
+$('#dob').oninput=dobCalc;dobCalc();
+var gy=$('#gy');gy.value=now.getFullYear();
+function roman(n){var m=[[1000,'M'],[900,'CM'],[500,'D'],[400,'CD'],[100,'C'],[90,'XC'],[50,'L'],[40,'XL'],[10,'X'],[9,'IX'],[5,'V'],[4,'IV'],[1,'I']],s='';m.forEach(function(x){while(n>=x[0]){s+=x[1];n-=x[0]}});return s}
+function conv(){var y=parseInt(gy.value,10),o=$('#gyOut');if(!y||y<4||y>3999){o.innerHTML='<div>Enter a year from 4 to 3999.</div>';return}
+ var an=['Rat','Ox','Tiger','Rabbit','Dragon','Snake','Horse','Goat','Monkey','Rooster','Dog','Pig'];
+ o.innerHTML='<div><strong>'+(y-78)+'</strong>Saka (from 22 March)</div><div><strong>'+(y+57)+'</strong>Vikram Samvat (from spring)</div><div><strong>'+(y-7)+'</strong>Ethiopian (from 11 Sept)</div><div><strong>≈ '+Math.round((y-622)*33/32)+'</strong>Islamic Hijri (approx.)</div><div><strong>'+roman(y)+'</strong>Roman numerals</div><div><strong>'+an[(y-4)%12]+'</strong>Chinese zodiac year</div>'}
+gy.oninput=conv;conv();
+
 /* facts */
-var F=[['September means 7','Rome’s year began in March, so September, October, November and December were months 7, 8, 9 and 10.'],['A 400-year loop','400 Gregorian years is exactly 146,097 days, or 20,871 weeks. Dates and weekdays line up again.'],['Friday the 13th wins','Over the 400-year cycle, the 13th falls on a Friday more often than on any other weekday.'],['A 30 February','Sweden had one in 1712 while it was messing up its switch of calendars.'],['The 445-day year','46 BCE was the longest year Rome ever had, added to realign the calendar.'],['Closest in winter','Earth is nearest the Sun around 3 January, in northern winter.']],fc=$('#facts');
-F.forEach(function(o){var b=document.createElement('button');b.className='card';b.setAttribute('aria-expanded','false');b.innerHTML='<b>'+o[0]+'</b><i>Tap to flip</i><span>'+o[1]+'</span>';b.onclick=function(){b.setAttribute('aria-expanded',b.getAttribute('aria-expanded')!=='true')};fc.appendChild(b)});
+flips($('#facts'),[['September means 7','Rome’s year began in March, so September, October, November and December were months 7, 8, 9 and 10.'],['A 400-year loop','400 Gregorian years make exactly 146,097 days, or 20,871 weeks. Dates and weekdays line up again.'],['Friday the 13th wins','Over the 400-year cycle, the 13th falls on a Friday more often than on any other weekday.'],['A 30 February','Sweden had one in 1712, while it was switching calendars.'],['The 445-day year','46 BCE was the longest year Rome ever had, added to realign the calendar.'],['Closest in winter','Earth is nearest the Sun around 3 January, in northern winter.']]);
+
+/* key words */
+tabs($('#kwTabs'),$('#kwBody'),[['Rotation','Earth spinning on its axis once in about 24 hours.'],['Revolution','Earth moving around the Sun once in about 365.2422 days.'],['Equinox','The two days a year (about 21 March and 23 September) with nearly equal day and night.'],['Solstice','The longest or shortest day of the year (about 21 June and 22 December).'],['Leap year','A year of 366 days, with 29 February added to catch up with Earth’s extra quarter day.'],['Lunar month','The time from one new moon to the next, about 29.5 days.']],function(e){return '<b class="hd">'+e[0]+'</b><p>'+e[1]+'</p>'});
+
 /* quiz */
-var Q=[['How long does Earth take to orbit the Sun?',['365 days exactly','365.2422 days','366 days'],1],['What did Pope Gregory delete in 1582?',['10 days','1 month','1 year'],0],['Was 1900 a leap year?',['Yes','No'],1],['What really causes the seasons?',['Distance from the Sun','The tilt of Earth’s axis','Phases of the Moon'],1],['July is named after…',['A Roman god','Julius Caesar','A harvest festival'],1]],qi=0,qs=0,qb=$('#qBox');
-function ask(){if(qi>=Q.length){qb.innerHTML='<div class="verdict gold">You scored '+qs+' out of '+Q.length+'</div><p>'+(qs>=4?'Calendar expert!':'Go back through the slides and try again.')+'</p><button class="btn" id="qr">Play again</button>';$('#qr').onclick=function(){qi=0;qs=0;ask()};return}
- var q=Q[qi];qb.innerHTML='<p class="mute">Question '+(qi+1)+' of '+Q.length+'</p><b>'+q[0]+'</b>';
+var Q=[['How long does Earth take to rotate once?',['About 24 hours','365 days','29.5 days'],0],['One revolution of Earth round the Sun takes…',['24 hours','365.2422 days','29.5 days'],1],['Why do we add 29 February in leap years?',['Earth’s year is about a quarter day longer than 365','To make February equal other months','Because of the Moon'],0],['What really causes the seasons?',['Distance from the Sun','Tilt of Earth’s axis','Phases of the Moon'],1],['Was 1900 a leap year?',['Yes','No'],1],['Which festival date is fixed by the Sun?',['Makar Sankranti','Diwali','Holi'],0],['A lunar month is about…',['7 days','29.5 days','365 days'],1]],qi=0,qs=0,qb=$('#qBox');
+function ask(){if(qi>=Q.length){qb.innerHTML='<div class="verdict gold">You scored '+qs+' out of '+Q.length+'</div><p>'+(qs>=6?'Calendar expert!':'Good try. Go back through the slides and play again.')+'</p><button class="btn" id="qr">Play again</button>';$('#qr').onclick=function(){qi=0;qs=0;ask()};return}
+ var q=Q[qi];qb.innerHTML='<p class="mute">Question '+(qi+1)+' of '+Q.length+'</p><b class="hd">'+q[0]+'</b>';
  q[1].forEach(function(t,k){var b=document.createElement('button');b.className='opt';b.textContent=t;b.onclick=function(){[].forEach.call(qb.querySelectorAll('.opt'),function(o,j){o.disabled=true;if(j===q[2])o.classList.add('ok')});if(k===q[2])qs++;else b.classList.add('bad');var n=document.createElement('button');n.className='btn';n.textContent=qi+1<Q.length?'Next question':'See score';n.onclick=function(){qi++;ask()};qb.appendChild(n)};qb.appendChild(b)})}
 ask();
+var side='e';try{side=localStorage.getItem('sc-side')||'e'}catch(e){}
+side={right:'e',left:'w'}[side]||side;if('nesw'.indexOf(side)<0)side='e';
+var cmp=$('#compass'),swp=$('#swap');
+function setSide(s){side=s;document.body.dataset.side=s;var h=s==='n'||s==='s';$('#prev').innerHTML=h?'&#9664;':'&#9650;';$('#next').innerHTML=h?'&#9654;':'&#9660;';[].forEach.call(cmp.querySelectorAll('button'),function(b){b.setAttribute('aria-pressed',b.dataset.s===s)});try{localStorage.setItem('sc-side',s)}catch(e){}}
+function tog(on){cmp.classList.toggle('on',on);swp.setAttribute('aria-expanded',on)}
+swp.onclick=function(e){e.stopPropagation();tog(!cmp.classList.contains('on'))};
+[].forEach.call(cmp.querySelectorAll('button'),function(b){b.onclick=function(e){e.stopPropagation();setSide(b.dataset.s);tog(false)}});
+document.addEventListener('click',function(e){if(!e.target.closest('.rail'))tog(false)});
+document.addEventListener('keydown',function(e){if(e.key==='Escape')tog(false)});
+setSide(side);
+go(0);
 })();
 </script>
 </body>

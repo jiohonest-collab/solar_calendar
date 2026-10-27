@@ -71,6 +71,19 @@ body[data-side="s"] .slide{padding-bottom:calc(clamp(1.1rem,3.5vw,3rem) + 4.6rem
 .ty h2{font-size:clamp(3.2rem,11vw,8rem);color:var(--gold);line-height:1}
 .ty .by{font-family:"Bricolage Grotesque",Cambria,Georgia,serif;font-weight:800;font-size:clamp(1.6rem,4.6vw,3.2rem);line-height:1.25;margin:0}
 .ty .by b{color:var(--gold)}
+.joy{position:fixed;right:.8rem;bottom:calc(4.9rem + env(safe-area-inset-bottom,0px));z-index:40;display:flex;flex-direction:row-reverse;align-items:flex-end;gap:.7rem;touch-action:none;user-select:none;-webkit-user-select:none}
+.jbase{position:relative;width:7rem;height:7rem;border-radius:.9rem;background:rgba(244,246,255,.10);border:1.5px solid rgba(244,246,255,.30);box-shadow:0 6px 24px rgba(0,0,0,.35);-webkit-backdrop-filter:blur(8px);backdrop-filter:blur(8px);touch-action:none;cursor:grab}
+.jbase::before,.jbase::after{content:"";position:absolute;background:var(--bd);left:50%;top:50%;transform:translate(-50%,-50%)}
+.jbase::before{width:62%;height:2px}.jbase::after{width:2px;height:62%}
+.jknob{position:absolute;left:50%;top:50%;width:2.9rem;height:2.9rem;border-radius:50%;transform:translate(-50%,-50%);background:radial-gradient(circle at 35% 30%,#FFD27A,var(--gold) 55%,var(--hot));box-shadow:0 4px 12px rgba(0,0,0,.5);pointer-events:none}
+.jtap{width:3.4rem;height:3.4rem;border-radius:50%;border:2px solid var(--gold);background:rgba(244,246,255,.10);-webkit-backdrop-filter:blur(8px);backdrop-filter:blur(8px);color:var(--gold);font-weight:800;font-size:.85rem;font-family:inherit;cursor:pointer;box-shadow:0 6px 24px rgba(0,0,0,.4)}
+.jtap:active{background:var(--gold);color:var(--onGold)}
+.jcur{position:fixed;left:0;top:0;width:28px;height:28px;z-index:60;pointer-events:none;transition:scale .12s}
+.jcur::before,.jcur::after{content:"";position:absolute;background:var(--gold);box-shadow:0 0 0 1.5px #070B1A,0 0 10px rgba(245,166,35,.8);border-radius:1px}
+.jcur::before{left:12px;top:0;width:4px;height:28px}.jcur::after{left:0;top:12px;width:28px;height:4px}
+.jcur.press{scale:1.5}
+.jh{outline:3px solid var(--gold)!important;outline-offset:2px}
+body[data-side="e"] .rail{bottom:calc(12.8rem + env(safe-area-inset-bottom,0px))}
 .btn{background:var(--gold);color:var(--onGold);border:0;border-radius:999px;padding:.8em 1.9em;font-weight:600;margin-top:.8em;min-height:3.4rem}
 .btn.ghost{background:transparent;color:var(--ink);border:2px solid var(--bd)}
 .panel{background:var(--panel);border:1px solid var(--bd);border-radius:1.25rem;padding:1.2rem 1.5rem}
@@ -206,6 +219,8 @@ svg.vis.big{max-width:34rem}
 </main>
 <nav class="rail" aria-label="Slide controls"><div class="compass" id="compass" role="group" aria-label="Place the controls"><button class="cn" data-s="n" aria-label="Top (North)">N</button><button class="cw" data-s="w" aria-label="Left (West)">W</button><i aria-hidden="true">&#10021;</i><button class="ce" data-s="e" aria-label="Right (East)">E</button><button class="cs" data-s="s" aria-label="Bottom (South)">S</button></div><button class="swap" id="swap" aria-label="Move the slide controls. Choose N, S, E or W." aria-expanded="false" title="Move controls (N S E W)">&#10021;</button><button class="nav" id="prev" aria-label="Previous slide">&#9650;</button><div class="vwrap"><input class="rg" id="rng" type="range" min="0" max="15" step="1" value="0" aria-orientation="vertical" aria-label="Slide navigator. Use arrow keys to change slide."></div><button class="nav" id="next" aria-label="Next slide">&#9660;</button></nav>
 <footer class="foot">Presented by <b>Darsh Jagani, Shlok, Viraj, Tanmay, Ayush, Rudra</b> (8A)<br>Made by <b>Darsh Jagani</b> (8A)</footer>
+<div class="joy" id="joy"><div class="jbase" id="jbase" role="application" aria-label="Joystick. Drag to move the plus cursor."><div class="jknob" id="jknob"></div></div><button class="jtap" id="jtap" aria-label="Tap where the plus cursor is">TAP</button></div>
+<div class="jcur" id="jcur" aria-hidden="true"></div>
 
 <script>
 (function(){
@@ -343,6 +358,25 @@ swp.onclick=function(e){e.stopPropagation();tog(!cmp.classList.contains('on'))};
 [].forEach.call(cmp.querySelectorAll('button'),function(b){b.onclick=function(e){e.stopPropagation();setSide(b.dataset.s);tog(false)}});
 document.addEventListener('click',function(e){if(!e.target.closest('.rail'))tog(false)});
 document.addEventListener('keydown',function(e){if(e.key==='Escape')tog(false)});
+
+var joy=$('#joy'),jb=$('#jbase'),jk=$('#jknob'),jc=$('#jcur'),jt=$('#jtap');
+var px=innerWidth/2,py=innerHeight/2,jx=0,jy=0,jon=false,jl=0,jh=null,SEL='button,a,input,label,[role="button"]';
+function jplace(){jc.style.transform='translate('+(px-14)+'px,'+(py-14)+'px)'}
+function jclamp(){px=Math.max(0,Math.min(innerWidth,px));py=Math.max(0,Math.min(innerHeight,py))}
+function jmv(e){var r=jb.getBoundingClientRect(),R=r.width/2,k=R*.62,x=e.clientX-(r.left+R),y=e.clientY-(r.top+R),d=Math.hypot(x,y);if(d>k){x*=k/d;y*=k/d}jx=x/k;jy=y/k;jk.style.transform='translate(calc(-50% + '+x+'px),calc(-50% + '+y+'px))'}
+function jend(){jon=false;jx=jy=0;jk.style.transform='translate(-50%,-50%)'}
+jb.addEventListener('pointerdown',function(e){jon=true;try{jb.setPointerCapture(e.pointerId)}catch(_){}jmv(e);e.preventDefault()});
+jb.addEventListener('pointermove',function(e){if(jon)jmv(e)});
+['pointerup','pointercancel','lostpointercapture'].forEach(function(n){jb.addEventListener(n,jend)});
+['touchstart','touchend'].forEach(function(n){joy.addEventListener(n,function(e){e.stopPropagation()},{passive:true})});
+function jhover(){var el=document.elementFromPoint(px,py),t=el&&!joy.contains(el)&&el.closest?el.closest(SEL):null;if(t!==jh){if(jh)jh.classList.remove('jh');if(t)t.classList.add('jh');jh=t}}
+function jtick(t){var dt=Math.min(.05,(t-jl)/1000);jl=t;if(jx||jy){var m=Math.hypot(jx,jy)*640;px+=jx*m*dt;py+=jy*m*dt;jclamp();jplace();jhover()}requestAnimationFrame(jtick)}
+function jfire(){var el=document.elementFromPoint(px,py);if(!el||joy.contains(el))return;var t=el.closest?(el.closest(SEL)||el):el;jc.classList.add('press');setTimeout(function(){jc.classList.remove('press')},160);
+ if(t.tagName==='INPUT'&&t.type==='range'){var r=t.getBoundingClientRect();if(r.width>r.height){t.value=(+t.min)+Math.max(0,Math.min(1,(px-r.left)/r.width))*(t.max-t.min);t.dispatchEvent(new Event('input',{bubbles:true}));t.dispatchEvent(new Event('change',{bubbles:true}))}return}
+ t.dispatchEvent(new MouseEvent('click',{bubbles:true,cancelable:true,clientX:px,clientY:py,view:window}))}
+jt.addEventListener('click',jfire);
+addEventListener('resize',function(){jclamp();jplace();jhover()});
+jplace();requestAnimationFrame(jtick);
 setSide(side);
 go(0);
 })();
